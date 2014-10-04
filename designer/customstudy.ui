@@ -58,31 +58,52 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QRadioButton" name="radio3">
        <property name="text">
         <string>Review forgotten cards</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QRadioButton" name="radio4">
        <property name="text">
         <string>Review ahead</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="5" column="0">
       <widget class="QRadioButton" name="radio5">
        <property name="text">
         <string>Preview new cards</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
+     <item row="6" column="0">
       <widget class="QRadioButton" name="radio6">
        <property name="text">
         <string>Study by card state or tag</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QRadioButton" name="radio7">
+       <property name="text">
+        <string>Don't learn new cards today</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QToolButton" name="tbResetNoNew">
+       <property name="toolTip">
+        <string>Allow learn new cards today</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="icons.qrc">
+         <normaloff>:/icons/edit-undo.png</normaloff>:/icons/edit-undo.png</iconset>
        </property>
       </widget>
      </item>

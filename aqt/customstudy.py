@@ -13,10 +13,14 @@ RADIO_FORGOT = 3
 RADIO_AHEAD = 4
 RADIO_PREVIEW = 5
 RADIO_CRAM = 6
+RADIO_NONEW = 7
 
 TYPE_NEW = 0
 TYPE_DUE = 1
 TYPE_ALL = 2
+
+NONEWCARDS = -100000
+ALLOWNEWCARDS = 100000
 
 class CustomStudy(QDialog):
     def __init__(self, mw):
@@ -32,6 +36,7 @@ class CustomStudy(QDialog):
         # enable the new/review limit revert button only if the limit has been extended today
         f.tbResetExtendNew.setEnabled(self.deck['todayExtendNew'][1] > 0)
         f.tbResetExtendRev.setEnabled(self.deck['todayExtendRev'][1] > 0)
+        f.tbResetNoNew.setEnabled(self.deck['todayExtendNew'][1] < 0)
         self.exec_()
 
     def setupSignals(self):
@@ -42,8 +47,10 @@ class CustomStudy(QDialog):
         c(f.radio4, s, lambda: self.onRadioChange(4))
         c(f.radio5, s, lambda: self.onRadioChange(5))
         c(f.radio6, s, lambda: self.onRadioChange(6))
+        c(f.radio7, s, lambda: self.onRadioChange(7))
         c(f.tbResetExtendNew, s, lambda: self.resetExtendNew())
         c(f.tbResetExtendRev, s, lambda: self.resetExtendRev())
+        c(f.tbResetNoNew, s, lambda: self.resetNoNew())
 
     def onRadioChange(self, idx):
         f = self.form; sp = f.spin
@@ -77,6 +84,8 @@ class CustomStudy(QDialog):
             pre = _("Increase today's review limit by")
             sval = min(rev, self.deck.get('extendRev', 10))
             smax = revExceeding
+        elif idx == RADIO_NONEW:
+            spShow = False
         elif idx == RADIO_FORGOT:
             pre = _("Review cards forgotten in last")
             post = _("days")
@@ -122,6 +131,13 @@ class CustomStudy(QDialog):
         self.mw.reset()
         return QDialog.accept(self)
 
+    def resetNoNew(self):
+        self.mw.col.sched.extendLimits(ALLOWNEWCARDS, 0)
+        self.deck['todayExtendNew'][1] += ALLOWNEWCARDS
+        self.mw.col.decks.save(self.deck)
+        self.mw.reset()
+        return QDialog.accept(self)
+
     def accept(self):
         f = self.form; i = self.radioIdx; spin = f.spin.value()
         if i == RADIO_NEW:
@@ -137,6 +153,14 @@ class CustomStudy(QDialog):
             self.mw.col.decks.save(self.deck)
             self.mw.col.sched.extendLimits(0, spin)
             self.mw.reset()
+            return QDialog.accept(self)
+        elif i == RADIO_NONEW:
+            if self.deck['todayExtendNew'][1] >= 0:
+                # using += will preserve the info on today new cards extension limit
+                self.deck['todayExtendNew'][1] += NONEWCARDS
+                self.mw.col.decks.save(self.deck)
+                self.mw.col.sched.extendLimits(NONEWCARDS, 0)
+                self.mw.reset()
             return QDialog.accept(self)
         elif i == RADIO_CRAM:
             tags = self._getTags()
