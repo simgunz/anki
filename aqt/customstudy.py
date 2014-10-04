@@ -50,6 +50,8 @@ class CustomStudy(QDialog):
         smin = 1; smax = DYN_MAX_SIZE; sval = 1
         post = _("cards")
         tit = ""
+        pre = ""
+        post = ""
         spShow = True
         typeShow = False
         ok = _("OK")
@@ -93,15 +95,16 @@ class CustomStudy(QDialog):
             ok = _("Choose Tags")
             sval = 100
             typeShow = True
-        sp.setVisible(spShow)
         f.cardType.setVisible(typeShow)
         f.title.setText(tit)
         f.title.setVisible(not not tit)
-        f.spin.setMinimum(smin)
-        f.spin.setMaximum(smax)
-        f.spin.setValue(sval)
         f.preSpin.setText(pre)
         f.postSpin.setText(post)
+        sp.setVisible(spShow)
+        if spShow:
+            f.spin.setMinimum(smin)
+            f.spin.setMaximum(smax)
+            f.spin.setValue(sval)
         f.buttonBox.button(QDialogButtonBox.Ok).setText(ok)
         self.radioIdx = idx
 
